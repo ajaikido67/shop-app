@@ -11,7 +11,7 @@ import './screens/product_detail_screen.dart';
 import 'providers/products.dart';
 
 void main() => runApp(MyApp());
-
+// just testing
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
