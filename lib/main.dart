@@ -10,6 +10,7 @@ import 'screens/product_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import 'providers/products.dart';
 
+// Hello world
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
