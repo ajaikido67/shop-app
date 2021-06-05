@@ -169,8 +169,8 @@ class Cart with ChangeNotifier {
     if (initLoad) {
       loadInitCart();
       initLoad = !initLoad;
-      print('initLoad = $initLoad');
     }
+    print('initLoad = $initLoad');
     return i;
   }
 

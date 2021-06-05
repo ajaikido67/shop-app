@@ -26,9 +26,7 @@ class _ProductOverviewState extends State<ProductOverview> {
 
   @override
   void initState() {
-    setState(() {
-      isLoading = true;
-    });
+    isLoading = true;
 
     Provider.of<Products>(context, listen: false).loadInitProducts().then((_) {
       Future.delayed(Duration(seconds: 1), () {
@@ -44,92 +42,98 @@ class _ProductOverviewState extends State<ProductOverview> {
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
-    final products =
-        _showOnlyFav ? productData.showFavItems : productData.items;
-
+   
+    print('i am buidling the widget');
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Shop'),
-        actions: [
-          PopupMenuButton(
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.Favourites) {
-                  _showOnlyFav = true;
-                } else {
-                  _showOnlyFav = false;
-                }
-              });
-            },
-            icon: Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Only Favourites'),
-                value: FilterOptions.Favourites,
-              ),
-              PopupMenuItem(
-                child: Text("Show All"),
-                value: FilterOptions.All,
-              )
-            ],
-          ),
-          Consumer<Cart>(
-            builder: (_, cart, ch) {
-              // print('I am buidling the badge');
-              return Badge(child: ch, value: cart.itemCount.toString());
-            },
-            child: IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(CartScreen.routeName);
+        appBar: AppBar(
+          title: Text('My Shop'),
+          actions: [
+            PopupMenuButton(
+              onSelected: (FilterOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FilterOptions.Favourites) {
+                    _showOnlyFav = true;
+                  } else {
+                    _showOnlyFav = false;
+                  }
+                });
               },
-            ),
-          )
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            SizedBox(
-              height: AppBar().preferredSize.height,
-              child: DrawerHeader(
-                child: Text('Drawer Header'),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  child: Text('Only Favourites'),
+                  value: FilterOptions.Favourites,
                 ),
-              ),
+                PopupMenuItem(
+                  child: Text("Show All"),
+                  value: FilterOptions.All,
+                )
+              ],
             ),
-            ListTile(
-              contentPadding: EdgeInsets.only(left: 10),
-              leading: Icon(Icons.edit),
-              title: Text('Manage Products'),
-              onTap: () {
-                Navigator.of(context).pushNamed(ManageProductScreen.routename);
-                // arguments: productData.items);
+            Consumer<Cart>(
+              builder: (_, cart, ch) {
+                print('I am buidling the badge');
+                return Badge(child: ch, value: cart.itemCount.toString());
               },
-            ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.shopping_cart,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(CartScreen.routeName);
+                },
+              ),
+            )
           ],
         ),
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : GridView.builder(
-              padding: EdgeInsets.all(10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 3 / 2,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10),
-              itemCount: products.length,
-              itemBuilder: (context, gIdx) => ChangeNotifierProvider.value(
-                value: products[gIdx],
-                child: ProductItem(_prodFav),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: AppBar().preferredSize.height,
+                child: DrawerHeader(
+                  child: Text('Drawer Header'),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                ),
               ),
-            ),
-    );
+              ListTile(
+                contentPadding: EdgeInsets.only(left: 10),
+                leading: Icon(Icons.edit),
+                title: Text('Manage Products'),
+                onTap: () {
+                  Navigator.of(context)
+                      .pushNamed(ManageProductScreen.routename);
+                  // arguments: productData.items);
+                },
+              ),
+            ],
+          ),
+        ),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Consumer<Products>(
+                builder: (context, productData, child) {
+                  final products = _showOnlyFav
+                      ? productData.showFavItems
+                      : productData.items;
+                  return GridView.builder(
+                    padding: EdgeInsets.all(10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 3 / 2,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10),
+                    itemCount: products.length,
+                    itemBuilder: (context, gIdx) =>
+                        ChangeNotifierProvider.value(
+                      value: products[gIdx],
+                      child: ProductItem(_prodFav),
+                    ),
+                  );
+                },
+              ));
   }
 }

@@ -63,7 +63,7 @@ class Products with ChangeNotifier {
       // final ww = convert.jsonDecode(favResponse.body)['favouriteProds'];
       // print('favresponse is = $ww');
       if (convert.jsonDecode(favResponse.body) != null) {
-        print('success');
+       // print('success');
         if (convert.jsonDecode(favResponse.body)['favouriteProds'] != null) {
           favData =
               convert.jsonDecode(favResponse.body)['favouriteProds'] as List;
